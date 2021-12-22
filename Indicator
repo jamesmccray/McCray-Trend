@@ -1,0 +1,50 @@
+//@version = 5
+indicator("McCray-Trend", overlay=true)
+
+q1 = input.int(8,"EMA 1")
+q2 = input.int(48,"EMA 2")
+q3 = input.int(111,"EMA 3")
+q4 = input.int(1394,"SMA 4")
+
+ref = input.string(defval = "MA",title = "Reference",options = ["MA","Day Close" ])
+per = input.float(40,"Percentage for reference")*0.01 + 1
+f_p = input.bool(false,"Fillings for daliy and weekly sma")
+c_d = input.bool(false,"Day close")
+
+
+d_close = request.security(syminfo.tickerid , "D" , close[1] , gaps = barmerge.gaps_off , lookahead = barmerge.lookahead_on)
+
+GreenLightMA = ta.ema(close, q1)
+RedLightEMA = ta.ema(close, q2)
+BullMarket = ta.ema(close, q3)
+TwoHundredWeek = ta.sma(close, q4)
+
+u1 = GreenLightMA > RedLightEMA and close < RedLightEMA ? color.red :
+ GreenLightMA > RedLightEMA and close > RedLightEMA ? color.green : color.red 
+
+u2 = GreenLightMA < RedLightEMA and close > RedLightEMA ? color.green :
+ GreenLightMA < RedLightEMA and close < RedLightEMA ? color.red : color.green
+
+g = plot(GreenLightMA,"sma 7", color = u2,linewidth = 3)
+r = plot(RedLightEMA, "sma 47",color = u1,linewidth = 3)
+b = plot(BullMarket, "sma 200",color = color.orange,linewidth =2)
+t = plot(TwoHundredWeek, "sma 1394",color = color.gray,linewidth =2)
+
+w1 = f_p == true ? 85 : 100
+
+refex = ref == "MA" ? TwoHundredWeek : 
+ ref == "Day Close" ? d_close : na 
+
+buy = ta.crossover(GreenLightMA, RedLightEMA) and close > BullMarket
+sell = ta.crossover(RedLightEMA, GreenLightMA) and close < BullMarket
+BearLow = ta.crossover(GreenLightMA, RedLightEMA) and close <= refex * per
+exit = ta.crossover(RedLightEMA,close) and RedLightEMA < GreenLightMA
+exit1 = ta.crossunder(GreenLightMA,close) and RedLightEMA > GreenLightMA
+
+plotshape(buy,"Buy",location = location.belowbar,style = shape.labelup,text = "Buy",color = color.green,textcolor = color.white,size = size.auto)
+plotshape(sell,"Sell",location = location.abovebar,style = shape.labeldown,text = "Sell",color = color.red,textcolor = color.white,size = size.auto)
+
+plot(c_d == true ? d_close : na)
+
+fill(g,r,color = GreenLightMA > RedLightEMA ? color.new(color.green,85) : color.new(color.red,85))
+fill(b,t,color = GreenLightMA > RedLightEMA ? color.new(color.green,w1) : color.new(color.red,w1))

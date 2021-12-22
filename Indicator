@@ -25,9 +25,9 @@ u1 = GreenLightMA > RedLightEMA and close < RedLightEMA ? color.red :
 u2 = GreenLightMA < RedLightEMA and close > RedLightEMA ? color.green :
  GreenLightMA < RedLightEMA and close < RedLightEMA ? color.red : color.green
 
-g = plot(GreenLightMA,"sma 7", color = u2,linewidth = 3)
-r = plot(RedLightEMA, "sma 47",color = u1,linewidth = 3)
-b = plot(BullMarket, "sma 200",color = color.orange,linewidth =2)
+g = plot(GreenLightMA,"sma 8", color = u2,linewidth = 3)
+r = plot(RedLightEMA, "sma 48",color = u1,linewidth = 3)
+b = plot(BullMarket, "sma 111",color = color.orange,linewidth =2)
 t = plot(TwoHundredWeek, "sma 1394",color = color.gray,linewidth =2)
 
 w1 = f_p == true ? 85 : 100

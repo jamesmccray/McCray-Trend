@@ -27,8 +27,8 @@ u2 = GreenLightMA < RedLightEMA and close > RedLightEMA ? color.green :
 
 g = plot(GreenLightMA,"sma 8", color = u2,linewidth = 3)
 r = plot(RedLightEMA, "sma 48",color = u1,linewidth = 3)
-b = plot(BullMarket, "sma 111",color = color.orange,linewidth =2)
-t = plot(TwoHundredWeek, "sma 1394",color = color.gray,linewidth =2)
+b = plot(BullMarket, "sma 111",color = color.orange,linewidth = 2)
+t = plot(TwoHundredWeek, "sma 1394",color = color.gray,linewidth = 2)
 
 w1 = f_p == true ? 85 : 100
 
@@ -37,14 +37,24 @@ refex = ref == "MA" ? TwoHundredWeek :
 
 buy = ta.crossover(GreenLightMA, RedLightEMA) and close > BullMarket
 sell = ta.crossover(RedLightEMA, GreenLightMA) and close < BullMarket
-BearLow = ta.crossover(GreenLightMA, RedLightEMA) and close <= refex * per
+BearLow = ta.crossover(GreenLightMA, RedLightEMA) and close <= refex * per and not buy
 exit = ta.crossover(RedLightEMA,close) and RedLightEMA < GreenLightMA
 exit1 = ta.crossunder(GreenLightMA,close) and RedLightEMA > GreenLightMA
 
 plotshape(buy,"Buy",location = location.belowbar,style = shape.labelup,text = "Buy",color = color.green,textcolor = color.white,size = size.auto)
 plotshape(sell,"Sell",location = location.abovebar,style = shape.labeldown,text = "Sell",color = color.red,textcolor = color.white,size = size.auto)
 
+
 plot(c_d == true ? d_close : na)
 
 fill(g,r,color = GreenLightMA > RedLightEMA ? color.new(color.green,85) : color.new(color.red,85))
 fill(b,t,color = GreenLightMA > RedLightEMA ? color.new(color.green,w1) : color.new(color.red,w1))
+
+if (BearLow)
+    lbl = label.new(bar_index, low, "Buy")
+    label.set_size(lbl, size.small)
+    label.set_color(lbl, color.rgb(5, 85, 8))
+    label.set_yloc(lbl, yloc.belowbar)
+    label.set_style(lbl, label.style_label_up)
+    label.set_textcolor(lbl, color.rgb(76, 175, 80))
+    label.set_textcolor(lbl, color.white)

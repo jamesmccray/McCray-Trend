@@ -25,9 +25,9 @@ u1 = GreenLightMA > RedLightEMA and close < RedLightEMA ? color.red :
 u2 = GreenLightMA < RedLightEMA and close > RedLightEMA ? color.green :
  GreenLightMA < RedLightEMA and close < RedLightEMA ? color.red : color.green
 
-g = plot(GreenLightMA,"sma 8", color = u2,linewidth = 3)
-r = plot(RedLightEMA, "sma 48",color = u1,linewidth = 3)
-b = plot(BullMarket, "sma 111",color = color.orange,linewidth = 2)
+g = plot(GreenLightMA,"sma 8", color = u2,linewidth = 1)
+r = plot(RedLightEMA, "sma 48",color = u1,linewidth = 1)
+b = plot(BullMarket, "sma 111",color = color.orange,linewidth = 1) 
 t = plot(TwoHundredWeek, "sma 1394",color = color.gray,linewidth = 2)
 
 w1 = f_p == true ? 85 : 100
@@ -47,7 +47,7 @@ plotshape(sell,"Sell",location = location.abovebar,style = shape.labeldown,text 
 
 plot(c_d == true ? d_close : na)
 
-fill(g,r,color = GreenLightMA > RedLightEMA ? color.new(color.green,85) : color.new(color.red,85))
+fill(g,r,color = GreenLightMA > RedLightEMA ? color.new(color.green,75) : color.new(color.red,75))
 fill(b,t,color = GreenLightMA > RedLightEMA ? color.new(color.green,w1) : color.new(color.red,w1))
 
 if (BearLow)
